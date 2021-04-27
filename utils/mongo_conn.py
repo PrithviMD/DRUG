@@ -24,7 +24,6 @@ class MongoConnect():
             collection = db[self.collection_name]
             return collection
         
-        
         except CollectionInvalid:
             print("Invalid Collection Name provided, check Collection name!")
             logging.error("Exception occurred at mongo_connection", exc_info=True)

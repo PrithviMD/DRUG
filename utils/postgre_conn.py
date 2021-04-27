@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import OperationalError
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy_utils import database_exists, create_database
@@ -40,8 +41,8 @@ class PostgresConnect():
             print('Creating Table...')
             df_to_dump.to_sql(table_name, con=engine, index=False, if_exists='replace')#Insert Data in table
             print('Table Created Successfully')
-        except OperationError:
-            print('Operation Error! check logs for info!')
+        except OperationalError:
+            print('Operational Error! check logs for info!')
             logging.error("Exception occurred at createDB_table", exc_info=True)
         except Exception as e:
             print('Something went wrong! check logs for more info!')
@@ -67,15 +68,12 @@ class PostgresConnect():
                 print('Database Exists! Connecting...')
                 engine.connect()
                 print('Connection Successfull!')
-            print('Creating Table...')
+            print('Executing Query!')
             df = pd.read_sql_query(query, engine)
             if engine:
                 engine.dispose()
-            print('Query executed Successfully')
+            print('Query executed Successfully.')
             return df
-        except UndefinedColumn:
-            print('Column mentioned in query does not exists! check logs for info!')
-            logging.error("Exception occurred at createDB_table", exc_info=True)
         except Exception as e:
             print('Something went wrong! check logs for more info!')
             logging.error("Exception occurred at createDB_table", exc_info=True)
